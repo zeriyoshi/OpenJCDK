@@ -16,14 +16,24 @@ drive_service_account_key = os.environ["GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY"]
 drive = build('drive', 'v3', credentials = service_account.Credentials.from_service_account_info(
     json.loads(drive_service_account_key)).with_scopes(['https://www.googleapis.com/auth/drive']
 ))
-items = drive.files().list(
-    q = f"'1Gf1bJ03uo9NKo4mugHkVWlsOZaKtuqoq' in parents and trashed = false",
-    pageSize = 10, 
-    fields = "files(id)"
-).execute().get("files")
+
+items = []
+page_token = None
+while True:
+    response = drive.files().list(
+        q = "'1Gf1bJ03uo9NKo4mugHkVWlsOZaKtuqoq' in parents and trashed = false",
+        spaces = "drive",
+        fields = "nextPageToken, files(id)",
+        pageToken = page_token
+    ).execute()
+    for item in response.get('files'):
+        items.append(item["id"])
+    page_token = response.get('nextPageToken', None)
+    if page_token is None:
+        break
 
 # Pick a picture randomly
-id = random.choice(items)["id"]
+id = random.choice(items)
 
 # Download file from Google Drive
 downloader = MediaIoBaseDownload(io.FileIO("temporary.jpg", "wb"), drive.files().get_media(fileId = id))
