@@ -1,7 +1,39 @@
+import io
 import os
 import random
 import tweepy
+import json
+from googleapiclient.http import MediaIoBaseDownload
+from googleapiclient.errors import HttpError
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
 
+# ----------------------------------------------------------------
+# Google Drive
+# ----------------------------------------------------------------
+drive_service_account_key = os.environ["GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY"]
+
+drive = build('drive', 'v3', credentials = service_account.Credentials.from_service_account_info(
+    json.loads(drive_service_account_key)).with_scopes(['https://www.googleapis.com/auth/drive']
+))
+items = drive.files().list(
+    q = f"'1Gf1bJ03uo9NKo4mugHkVWlsOZaKtuqoq' in parents and trashed = false",
+    pageSize = 10, 
+    fields = "files(id)"
+).execute().get("files")
+
+# Pick a picture randomly
+id = random.choice(items)["id"]
+
+# Download file from Google Drive
+downloader = MediaIoBaseDownload(io.FileIO("temporary.jpg", "wb"), drive.files().get_media(fileId = id))
+finished = False
+while finished is False:
+    _, finished = downloader.next_chunk()
+
+# ----------------------------------------------------------------
+# Twitter
+# ----------------------------------------------------------------
 consumer_key = os.environ["TWITTER_CONSUMER_KEY"]
 consumer_secret = os.environ["TWITTER_CONSUMER_SECRET"]
 access_token = os.environ["TWITTER_ACCESS_TOKEN"]
@@ -12,6 +44,7 @@ oauth1.set_access_token(access_token, access_token_secret)
 
 # Create OAuth 1.1 API object for Media Upload
 api_1_1 = tweepy.API(oauth1)
+
 # Create OAuth 2.0 Client object for Tweet
 client_2_0 = tweepy.Client(
     consumer_key = consumer_key, 
@@ -20,10 +53,6 @@ client_2_0 = tweepy.Client(
     access_token_secret = access_token_secret
 )
 
-# Pick a picture randomly
-directory = "./images"
-file = random.choice([f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))])
-
 # Upload picture and Tweet
-media = api_1_1.media_upload(filename = "/".join([directory, file]))
+media = api_1_1.media_upload("./temporary.jpg")
 client_2_0.create_tweet(media_ids = [media.media_id])
