@@ -72,10 +72,10 @@ media = api_1_1.media_upload('temporary')
 now = datetime.now(pytz.timezone('Asia/Tokyo'))
 message = '#邪神ちゃん今日の１枚 をどうぞ。'
 if 4 <= now.hour < 11:
-    message = "フォロワーの皆さま、おはようございます！\n" + message
+    message = "フォロワーの皆さま、おはようございます！ " + message
 elif 11 <= now.hour < 15:
-    message = "フォロワーの皆さま、ランチタイムです！\n" + message
+    message = "フォロワーの皆さま、ランチタイムです！ " + message
 else :
-    message = "フォロワーの皆さま、今日も１日おつかれさまでした。お休み前に\n" + message
+    message = "フォロワーの皆さま、今日も１日おつかれさまでした。お休み前に " + message
 
 client_2_0.create_tweet(text = message, media_ids = [media.media_id])
