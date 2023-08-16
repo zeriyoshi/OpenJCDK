@@ -12,6 +12,7 @@ from google.oauth2 import service_account
 # Google Drive
 # ----------------------------------------------------------------
 drive_service_account_key = os.environ["GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY"]
+drive_directory_id = os.environ["GOOGLE_DRIVE_DIRECTORY_ID"]
 
 drive = build('drive', 'v3', credentials = service_account.Credentials.from_service_account_info(
     json.loads(drive_service_account_key)).with_scopes(['https://www.googleapis.com/auth/drive']
@@ -21,7 +22,7 @@ items = []
 page_token = None
 while True:
     response = drive.files().list(
-        q = "'1dNtUKp3OrhtkntOVXRhTo2gY5Vs0pkze' in parents and trashed = false",
+        q = "'" + drive_directory_id + "' in parents and trashed = false",
         spaces = "drive",
         fields = "nextPageToken, files(id)",
         pageToken = page_token
@@ -36,7 +37,7 @@ while True:
 id = random.choice(items)
 
 # Download file from Google Drive
-downloader = MediaIoBaseDownload(io.FileIO("temporary.jpg", "wb"), drive.files().get_media(fileId = id))
+downloader = MediaIoBaseDownload(io.FileIO("temporary", "wb"), drive.files().get_media(fileId = id))
 finished = False
 while finished is False:
     _, finished = downloader.next_chunk()
@@ -64,5 +65,5 @@ client_2_0 = tweepy.Client(
 )
 
 # Upload picture and Tweet
-media = api_1_1.media_upload("./temporary.jpg")
+media = api_1_1.media_upload("./temporary")
 client_2_0.create_tweet(media_ids = [media.media_id])
