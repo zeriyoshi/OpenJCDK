@@ -71,9 +71,9 @@ media = api_1_1.media_upload('temporary')
 # Generate text
 now = datetime.now(pytz.timezone('Asia/Tokyo'))
 message = '#邪神ちゃん今日の１枚 をどうぞ。'
-if 4 <= now.hour < 12:
+if 4 <= now.hour < 11:
     message = "フォロワーの皆さま、おはようございます！\n" + message
-elif 12 <= now.hour < 17:
+elif 11 <= now.hour < 15:
     message = "フォロワーの皆さま、ランチタイムです！\n" + message
 else :
     message = "フォロワーの皆さま、今日も１日おつかれさまでした。お休み前に\n" + message
