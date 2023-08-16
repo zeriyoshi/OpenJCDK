@@ -1,18 +1,19 @@
 import io
 import os
+import pytz
 import random
 import tweepy
 import json
+from datetime import datetime
 from googleapiclient.http import MediaIoBaseDownload
-from googleapiclient.errors import HttpError
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
 # ----------------------------------------------------------------
 # Google Drive
 # ----------------------------------------------------------------
-drive_service_account_key = os.environ["GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY"]
-drive_directory_id = os.environ["GOOGLE_DRIVE_DIRECTORY_ID"]
+drive_service_account_key = os.environ['GOOGLE_DRIVE_SERVICE_ACCOUNT_KEY']
+drive_directory_id = os.environ['GOOGLE_DRIVE_DIRECTORY_ID']
 
 drive = build('drive', 'v3', credentials = service_account.Credentials.from_service_account_info(
     json.loads(drive_service_account_key)).with_scopes(['https://www.googleapis.com/auth/drive']
@@ -23,8 +24,8 @@ page_token = None
 while True:
     response = drive.files().list(
         q = "'" + drive_directory_id + "' in parents and trashed = false",
-        spaces = "drive",
-        fields = "nextPageToken, files(id)",
+        spaces = 'drive',
+        fields = 'nextPageToken, files(id)',
         pageToken = page_token
     ).execute()
     for item in response.get('files'):
@@ -37,7 +38,7 @@ while True:
 id = random.choice(items)
 
 # Download file from Google Drive
-downloader = MediaIoBaseDownload(io.FileIO("temporary", "wb"), drive.files().get_media(fileId = id))
+downloader = MediaIoBaseDownload(io.FileIO('temporary', 'wb'), drive.files().get_media(fileId = id))
 finished = False
 while finished is False:
     _, finished = downloader.next_chunk()
@@ -45,10 +46,10 @@ while finished is False:
 # ----------------------------------------------------------------
 # Twitter
 # ----------------------------------------------------------------
-consumer_key = os.environ["TWITTER_CONSUMER_KEY"]
-consumer_secret = os.environ["TWITTER_CONSUMER_SECRET"]
-access_token = os.environ["TWITTER_ACCESS_TOKEN"]
-access_token_secret = os.environ["TWITTER_ACCESS_TOKEN_SECRET"]
+consumer_key = os.environ['TWITTER_CONSUMER_KEY']
+consumer_secret = os.environ['TWITTER_CONSUMER_SECRET']
+access_token = os.environ['TWITTER_ACCESS_TOKEN']
+access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
 
 oauth1 = tweepy.OAuthHandler(consumer_key, consumer_secret)
 oauth1.set_access_token(access_token, access_token_secret)
@@ -65,5 +66,16 @@ client_2_0 = tweepy.Client(
 )
 
 # Upload picture and Tweet
-media = api_1_1.media_upload("./temporary")
-client_2_0.create_tweet(media_ids = [media.media_id])
+media = api_1_1.media_upload('temporary')
+
+# Generate text
+now = datetime.now(pytz.timezone('Asia/Tokyo'))
+message = '#邪神ちゃん今日の１枚 をどうぞ。'
+if 4 <= now.hour < 11:
+    message = "フォロワーの皆さま、おはようございます！\n" + message
+elif 11 <= now.hour < 15:
+    message = "フォロワーの皆さま、ランチタイムです！\n" + message
+else :
+    message = "フォロワーの皆さま、今日も１日おつかれさまでした。お休み前に\n" + message
+
+client_2_0.create_tweet(text = message, media_ids = [media.media_id])
