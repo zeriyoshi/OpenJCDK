@@ -76,6 +76,6 @@ if 4 <= now.hour < 11:
 elif 11 <= now.hour < 15:
     message = "フォロワーの皆さま、ランチタイムです！ " + message
 else :
-    message = "フォロワーの皆さま、今日も１日おつかれさまでした。お休み前に " + message
+    message = "フォロワーの皆さま、今日も１日おつかれさまでした。おやすみ前に " + message
 
 client_2_0.create_tweet(text = message, media_ids = [media.media_id])
