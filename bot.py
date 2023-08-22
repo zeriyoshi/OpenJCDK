@@ -5,9 +5,50 @@ import random
 import tweepy
 import json
 from datetime import datetime
+from html.parser import HTMLParser
 from googleapiclient.http import MediaIoBaseDownload
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+
+# ----------------------------------------------------------------
+# Message
+# ----------------------------------------------------------------
+class MessageManager(HTMLParser):
+    def __init__(self, data: str|None):
+        super().__init__()
+        self.entering_tag = ''
+        self.tweet = None
+        self.alt = None
+        if data is not None:
+            self.feed(data)
+    
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        self.entering_tag = tag
+    
+    def handle_endtag(self, tag: str) -> None:
+        self.entering_tag = None
+    
+    def handle_data(self, data: str) -> None:
+        match self.entering_tag:
+            case 'tweet':
+                self.tweet = data
+            case 'alt':
+                self.alt = data
+    
+    def generate(self) -> tuple[str, str | None]:
+        if self.tweet is not None:
+            return [self.tweet, self.alt]
+
+        now = datetime.now(pytz.timezone('Asia/Tokyo'))
+        message = os.environ.get('MESSAGE_FOOTER', '#邪神ちゃん今日の１枚 をどうぞ。')
+        if 4 <= now.hour < 11:
+            message = os.environ.get('MESSAGE_HEADER_MORNING', 'フォロワーの皆さま、おはようございます！ ') + message
+        elif 11 <= now.hour < 15:
+            message = os.environ.get('MESSAGE_HEADER_NOON', 'フォロワーの皆さま、ランチタイムです！ ') + message
+        else :
+            message = os.environ.get('MESSAGE_HEADER_NIGHT', 'フォロワーの皆さま、今日も１日おつかれさまでした。お休み前に ') + message
+        
+        return [message, self.alt]
 
 # ----------------------------------------------------------------
 # Google Drive
@@ -43,9 +84,15 @@ finished = False
 while finished is False:
     _, finished = downloader.next_chunk()
 
+# Get a metadata from Google Drive
+metadata = drive.files().get(fileId = id, fields = 'name, mimeType, description').execute()
+
 # ----------------------------------------------------------------
-# Twitter
+# X (formerly Twitter)
 # ----------------------------------------------------------------
+message, alt = MessageManager(metadata.get('description', None)).generate()
+
+# Setup tweepy
 consumer_key = os.environ['TWITTER_CONSUMER_KEY']
 consumer_secret = os.environ['TWITTER_CONSUMER_SECRET']
 access_token = os.environ['TWITTER_ACCESS_TOKEN']
@@ -57,7 +104,7 @@ oauth1.set_access_token(access_token, access_token_secret)
 # Create OAuth 1.1 API object for Media Upload
 api_1_1 = tweepy.API(oauth1)
 
-# Create OAuth 2.0 Client object for Tweet
+# Create OAuth 2.0 Client object for Post
 client_2_0 = tweepy.Client(
     consumer_key = consumer_key, 
     consumer_secret = consumer_secret, 
@@ -65,17 +112,14 @@ client_2_0 = tweepy.Client(
     access_token_secret = access_token_secret
 )
 
-# Upload picture and Tweet
-media = api_1_1.media_upload('temporary')
+# Upload media
+mime = metadata.get('mimeType', 'image/')
+if mime.startswith('image/'):
+    media = api_1_1.simple_upload('temporary')
+    if alt is not None:
+        api_1_1.create_media_metadata(media.media_id, alt)
+else:
+    media = api_1_1.chunked_upload('temporary', file_type = mime)
 
-# Generate text
-now = datetime.now(pytz.timezone('Asia/Tokyo'))
-message = '#邪神ちゃん今日の１枚 をどうぞ。'
-if 4 <= now.hour < 11:
-    message = "フォロワーの皆さま、おはようございます！ " + message
-elif 11 <= now.hour < 15:
-    message = "フォロワーの皆さま、ランチタイムです！ " + message
-else :
-    message = "フォロワーの皆さま、今日も１日おつかれさまでした。おやすみ前に " + message
-
+# Post
 client_2_0.create_tweet(text = message, media_ids = [media.media_id])
