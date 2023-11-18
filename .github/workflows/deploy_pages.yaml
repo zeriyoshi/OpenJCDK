@@ -1,0 +1,45 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'docs/*'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: npm
+      - name: Install packages
+        run: |
+          npm ci
+      - name: Build static page
+        run: |
+          npm run build
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: docs
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-22.04
+    needs: Build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy_pages.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deploy_pages
+        uses: actions/deploy-pages@v2
