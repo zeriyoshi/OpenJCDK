@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - 'main'
+    paths:
+      - 'bot.py'
+      - 'Dockerfile'
 
 jobs:
   build_and_push:
