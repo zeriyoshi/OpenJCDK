@@ -20,14 +20,16 @@ jobs:
           cache-dependency-path: 'docs/package-lock.json'
       - name: Install packages
         run: |
+          cd "${{ github.workspace }}/docs"
           npm ci
       - name: Build static page
         run: |
+          cd "${{ github.workspace }}/docs"
           npm run build
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v2
         with:
-          path: docs
+          path: docs/build
   deploy:
     name: Deploy
     runs-on: ubuntu-22.04
