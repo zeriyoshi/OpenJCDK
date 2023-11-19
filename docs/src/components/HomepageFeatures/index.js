@@ -4,26 +4,26 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Bongo',
+    title: '低コスト',
     description: (
       <>
-        foo
+        邪神ちゃん画像botは Google Cloud のマネージド サービスを活用して構築されており、月あたり約 10 円程度と超低コストで運用されています。
       </>
     ),
   },
   {
-    title: 'Conga',
+    title: '公式許諾済み',
     description: (
       <>
-        bar
+        邪神ちゃん画像botは公式アカウントから投稿されており、版権 (著作権) に関する法的な問題がクリアです。
       </>
     ),
   },
   {
-    title: 'Djembe',
+    title: 'オープンソース',
     description: (
       <>
-        baz
+        邪神ちゃん画像botのソースおよびドキュメントは GitHub ですべて公開されており、誰でも閲覧・貢献することができます。
       </>
     ),
   },

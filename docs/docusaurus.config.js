@@ -8,7 +8,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'OpenJCDK Documents',
+  title: 'OpenJCDK',
   tagline: '邪神ちゃんドロップキック画像botドキュメント',
   favicon: 'img/favicon.ico',
 
@@ -30,8 +30,8 @@ const config = {
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: 'ja',
+    locales: ['ja'],
   },
 
   presets: [
@@ -41,17 +41,13 @@ const config = {
       ({
         docs: {
           sidebarPath: './sidebars.js',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/zeriyoshi/OpenJCDK/tree/main/docs/',
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/zeriyoshi/OpenJCDK/tree/main/docs/'
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -65,7 +61,7 @@ const config = {
     ({
       image: 'img/card.jpg',
       navbar: {
-        title: 'OpenJCDK Document',
+        title: 'OpenJCDK',
         logo: {
           alt: 'Logo',
           src: 'img/hebi_aodaisyou.png',
@@ -73,10 +69,11 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'usageSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'ドキュメント',
           },
+          { to: '/blog', label: 'ブログ', position: 'left' },
           {
             href: 'https://github.com/zeriyoshi/OpenJCDK',
             label: 'GitHub',
