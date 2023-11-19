@@ -2,4 +2,6 @@
 
 邪神ちゃんドロップキックのキャプチャ画像を毎日 7:00, 12:00, 22:00 にツイートします (公式)
 
-https://twitter.com/jashinchan_PJ
+管理方法・使い方などのドキュメントは以下から閲覧できます
+
+https://zeriyoshi.github.io/OpenJCDK/
