@@ -9,7 +9,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'OpenJCDK',
-  tagline: '邪神ちゃんドロップキック画像botドキュメント',
+  tagline: '邪神ちゃんドロップキック画像bot',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
@@ -74,6 +74,11 @@ const config = {
             label: 'ドキュメント',
           },
           { to: '/blog', label: 'ブログ', position: 'left' },
+          {
+            href: 'https://twitter.com/search?q=%23%E9%82%AA%E7%A5%9E%E3%81%A1%E3%82%83%E3%82%93%E4%BB%8A%E6%97%A5%E3%81%AE%EF%BC%91%E6%9E%9A',
+            label: '投稿画像を見る',
+            position: 'left'
+          },
           {
             href: 'https://github.com/zeriyoshi/OpenJCDK',
             label: 'GitHub',
