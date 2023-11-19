@@ -1,7 +1,3 @@
----
-sidebar_position: 2
----
-
 # ポストされるメディアの管理
 
 以下の形式のメディアをアップロードできます。
@@ -22,6 +18,11 @@ https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/uploadin
 投稿するメディアは以下の Google Drive にアップロードします。
 
 https://drive.google.com/drive/u/1/folders/1dNtUKp3OrhtkntOVXRhTo2gY5Vs0pkze
+
+大まかに、以下の要件を満たしていればほぼ問題ありません。
+
+- 10MB 以下のファイルサイズ
+- 4K または 12MP (1200 万画素) 以下の解像度
 
 ## メディアを削除する
 
@@ -81,4 +82,3 @@ ALT (概要) は現在画像ファイルにのみ設定できます。これは 
 結果
 
 ![Metadata alt](./metadata_alt2.png)
-

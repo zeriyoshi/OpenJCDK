@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 0
 ---
 
 # 概要
@@ -7,4 +7,3 @@ sidebar_position: 1
 このドキュメントは OpenJCDK (邪神ちゃん画像bot) のマニュアルです。
 
 左メニューから閲覧したいドキュメントを選択してください。
-
