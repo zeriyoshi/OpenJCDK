@@ -1,10 +1,13 @@
 # Alpine is not the best option. But it is good enough.
-FROM python:3.12-alpine
+FROM python:3.12.5-alpine3.20
 
 ENV PYTHONUNBUFFERED 1
 
-COPY . ./
+COPY ./bot.py /application/bot.py
+COPY ./requirements.txt /application/requirements.txt
+
+WORKDIR /application
 
 RUN pip install --no-cache-dir -r "requirements.txt"
 
-CMD /usr/local/bin/python "bot.py"
+CMD /usr/local/bin/python "/application/bot.py"
