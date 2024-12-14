@@ -1,4 +1,4 @@
-google_api_python_client==2.154.0
+google_api_python_client==2.155.0
 protobuf==5.29.0
 pytz==2024.2
 tweepy==4.14.0
