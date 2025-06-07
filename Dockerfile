@@ -1,5 +1,5 @@
 # Alpine is not the best option. But it is good enough.
-FROM python:3.13.2-alpine3.21
+FROM python:3.13.4-alpine3.21
 
 ENV PYTHONUNBUFFERED=1
 
