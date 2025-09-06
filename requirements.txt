@@ -1,5 +1,5 @@
 google_api_python_client==2.181.0
-protobuf==6.31.1
+protobuf==6.32.0
 pytz==2025.2
 tweepy==4.16.0
 standard-imghdr==3.13.0
