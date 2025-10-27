@@ -16,3 +16,11 @@ updates:
     labels:
       - 'docker'
       - 'dependencies'
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'saturday'
+    labels:
+      - 'github-actions'
+      - 'dependencies'
