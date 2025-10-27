@@ -1,13 +1,15 @@
-# Alpine is not the best option. But it is good enough.
-FROM python:3.13.7-alpine3.21
+FROM golang:1.25.3-trixie AS builder
 
-ENV PYTHONUNBUFFERED=1
+WORKDIR /build
 
-COPY ./bot.py /application/bot.py
-COPY ./requirements.txt /application/requirements.txt
+COPY go.mod go.sum bot.go ./
+RUN go mod download
 
-WORKDIR /application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bot .
 
-RUN pip install --no-cache-dir -r "requirements.txt"
+FROM scratch AS runner
 
-CMD /usr/local/bin/python "/application/bot.py"
+COPY --from=builder /build/bot /bot
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
+CMD ["/bot"]

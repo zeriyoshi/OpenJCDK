@@ -1,17 +1,19 @@
 {
   "name": "OpenJCDK",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "target": "builder"
   },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-azuretools.vscode-docker",
-        "ms-python.python"
+        "ms-python.python",
+        "anthropic.claude-code"
       ]
     }
   },
   "initializeCommand": "if ! test -f \".env\"; then cp \".env.example\" \".env\"; fi",
   "runArgs": ["--env-file", ".env"],
-  "onCreateCommand": "apk add --no-cache \"git\" \"openssh\""
+  "onCreateCommand": "apt-get update && apt-get install -y git openssh-client"
 }

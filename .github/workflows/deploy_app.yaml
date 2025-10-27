@@ -5,9 +5,10 @@ on:
     branches:
       - 'main'
     paths:
-      - 'bot.py'
+      - 'go.mod'
+      - 'go.sum'
+      - 'bot.go'
       - 'Dockerfile'
-      - 'requirements.txt'
 
 jobs:
   build_and_push:

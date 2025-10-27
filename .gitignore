@@ -1,3 +1,4 @@
 .env
 temporary
 *.DS_Store
+bot

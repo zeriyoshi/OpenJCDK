@@ -1,12 +1,13 @@
 version: 2
 updates:
-  - package-ecosystem: 'pip'
+  - package-ecosystem: 'gomod'
     directory: '/'
     schedule:
       interval: 'weekly'
       day: 'saturday'
     labels:
-      - 'python'
+      - 'go'
+      - 'dependencies'
   - package-ecosystem: 'docker'
     directory: '/'
     schedule:
@@ -14,10 +15,4 @@ updates:
       day: 'saturday'
     labels:
       - 'docker'
-  - package-ecosystem: 'npm'
-    directory: 'docs/'
-    schedule:
-      interval: 'weekly'
-      day: 'saturday'
-    labels:
-      - 'node'
+      - 'dependencies'
